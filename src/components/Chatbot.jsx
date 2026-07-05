@@ -12,7 +12,7 @@ const QUICK_REPLIES = [
   "Kapan waktu kegiatan belajar santri?",
   "Apakah santri diperbolehkan sambil bekerja?",
   "Apakah boleh mendaftar di pertengahan semester?",
-  "Bagaimana alur pendaftaran santri?",
+  "Bagaimana alur pendaftaran santri baru?",
   "Apa saja fasilitas Pesantren?",
   "Bagaimana sistem pendidikan di Pesantren?",
   "Apakah pesantren menerima untuk Putra dan Putri?",
@@ -34,6 +34,11 @@ const Chatbot = () => {
       text: "Saya Hikam, Ada yang bisa saya bantu terkait Al-Hikam?",
     },
   ]);
+
+  const [remainingQuickReplies, setRemainingQuickReplies] = useLocalStorage(
+    "chat_quick_replies",
+    QUICK_REPLIES
+  );
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -61,6 +66,10 @@ const Chatbot = () => {
   const handleSend = async (quickText) => {
     const textToSend = (quickText ?? input).trim();
     if (!textToSend) return;
+
+    if (quickText) {
+      setRemainingQuickReplies((prev) => prev.filter((q) => q !== quickText));
+    }
 
     const userMessage = { role: "user", text: textToSend };
 
@@ -123,6 +132,7 @@ const Chatbot = () => {
         text: "Saya Hikam, Ada yang bisa saya bantu terkait Al-Hikam?",
       },
     ]);
+    setRemainingQuickReplies(QUICK_REPLIES);
     setShowConfirm(false);
   };
 
@@ -343,9 +353,9 @@ const Chatbot = () => {
                 </div>
               )}
 
-              {messages.length <= 1 && !isTyping && (
+              {remainingQuickReplies.length > 0 && !isTyping && (
                 <div className="flex flex-wrap gap-2 pt-1">
-                  {QUICK_REPLIES.map((question, idx) => (
+                  {remainingQuickReplies.map((question, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleSend(question)}
