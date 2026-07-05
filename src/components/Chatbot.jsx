@@ -12,7 +12,7 @@ const QUICK_REPLIES = [
   "Kapan waktu kegiatan belajar santri?",
   "Apakah santri diperbolehkan sambil bekerja?",
   "Apakah boleh mendaftar di pertengahan semester?",
-  "Bagaimana alur pendaftaran santri baru?",
+  "Bagaimana alur pendaftaran santri?",
   "Apa saja fasilitas Pesantren?",
   "Bagaimana sistem pendidikan di Pesantren?",
   "Apakah pesantren menerima untuk Putra dan Putri?",
