@@ -5,6 +5,19 @@ import useLocalStorage from "../hooks/useLocalStorage";
 import ReactMarkdown from "react-markdown";
 const API_URL = import.meta.env.VITE_API_URL;
 
+const QUICK_REPLIES = [
+  "Berapa biaya SPP per bulan?",
+  "Kapan pendaftaran santri baru dibuka?",
+  "Siapa saja yang dapat mendaftar?",
+  "Kapan waktu kegiatan belajar santri?",
+  "Apakah santri diperbolehkan sambil bekerja?",
+  "Apakah boleh mendaftar di pertengahan semester?",
+  "Bagaimana alur pendaftaran santri baru?",
+  "Apa saja fasilitas Pesantren?",
+  "Bagaimana sistem pendidikan di Pesantren?",
+  "Apakah pesantren menerima untuk Putra dan Putri?",
+];
+
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -45,15 +58,16 @@ const Chatbot = () => {
     };
   }, [isOpen]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  const handleSend = async (quickText) => {
+    const textToSend = (quickText ?? input).trim();
+    if (!textToSend) return;
 
-    const userMessage = { role: "user", text: input };
+    const userMessage = { role: "user", text: textToSend };
 
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
 
-    const currentInput = input;
+    const currentInput = textToSend;
     setInput("");
     setIsTyping(true);
 
@@ -328,6 +342,21 @@ const Chatbot = () => {
                   </div>
                 </div>
               )}
+
+              {messages.length <= 1 && !isTyping && (
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {QUICK_REPLIES.map((question, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleSend(question)}
+                      className="text-xs md:text-sm text-left bg-white border border-[#DCE4D9] text-[#3A4D39] px-3 py-2 rounded-full hover:bg-[#F0F4EF] transition-colors"
+                    >
+                      {question}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               <div ref={messagesEndRef} />
             </div>
 
@@ -341,7 +370,7 @@ const Chatbot = () => {
                 className="flex-grow text-sm bg-gray-50 border border-gray-200 rounded-md px-5 py-3 focus:outline-none focus:ring-2 focus:ring-[#597E52]"
               />
               <button
-                onClick={handleSend}
+                onClick={() => handleSend()}
                 className="bg-[#597E52] text-white w-12 h-12 rounded-md flex items-center justify-center shadow-lg active:scale-95 transition-all"
               >
                 <svg
